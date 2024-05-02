@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.config.HibernateConfig;
 import org.example.entity.*;
 import org.example.enums.FamilyStatus;
 import org.example.enums.Gender;
@@ -13,6 +14,7 @@ import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
+        HibernateConfig.getEntityManagerFactory();
         while (true) {
             System.out.println("AGENCY\n" +
                     " 1.Save\n" +
@@ -59,7 +61,7 @@ public class App {
                     " Выберите команду: ");
             Scanner scannerString = new Scanner(System.in);
             Scanner scannerLong = new Scanner(System.in);
-            String comand = scannerString.nextLine();
+            String command = scannerString.nextLine();
             AgencyService agencyService = new AgencyServiceImpl();
             AddressService addressService = new AddressServiceImpl();
             CustomerService customerService = new CustomerServiceImpl();
@@ -69,7 +71,7 @@ public class App {
             //TODO save
             //  System.out.println(agencyService.saveAgency(new Agency("Iprofi", "+996099878979", address1)));
             // System.out.println(agencyService.saveAgency(new Agency("GX", "+996099878979", address1)));
-            switch (comand) {
+            switch (command) {
                 case "1" -> {
                     Address address1 = new Address("Бишкек", "Джал", "Токтоналиева");
                     System.out.println(agencyService.saveAgency(new Agency("Aizix", "+996099878979", address1)));
