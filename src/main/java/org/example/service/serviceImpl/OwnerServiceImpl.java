@@ -17,8 +17,13 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public String saveOwner(Owner owner, House house) {
-        return ownerRepository.saveOwner(owner, house);
+    public String saveOwnerWithHouse(Owner owner, House house) {
+        return ownerRepository.saveOwnerWithHouse(owner, house);
+    }
+
+    @Override
+    public String saveOwner(Owner owner) {
+        return ownerRepository.saveOwner(owner);
     }
 
     @Override

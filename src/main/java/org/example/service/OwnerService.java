@@ -9,7 +9,8 @@ import java.util.Optional;
 public interface OwnerService {
     List<Owner> getAllOwners();
 
-    String saveOwner(Owner owner, House house);
+    String saveOwnerWithHouse(Owner owner, House house);
+    String saveOwner(Owner owner);
 
     String updateOwnerById(Long id, Owner newOwner);
 

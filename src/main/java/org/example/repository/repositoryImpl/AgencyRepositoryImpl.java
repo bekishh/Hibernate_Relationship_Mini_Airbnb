@@ -31,14 +31,10 @@ public class AgencyRepositoryImpl implements AgencyRepository {
     @Override
     public Agency getAgencyById(Long agencyId) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
-        try {
-            entityManager.getTransaction().begin();
-            Agency agency = entityManager.createQuery("select a from Agency a where a.id = :id", Agency.class)
-                    .setParameter("id", agencyId)
-                    .getSingleResult();
-            entityManager.getTransaction().commit();
+        Agency agency = entityManager.find(Agency.class, agencyId);
+        if (agency != null) {
             return agency;
-        } catch (HibernateException e) {
+        } else {
             System.out.println("Агентство с ID " + agencyId + " не найден!");
             return null;
         }
@@ -49,10 +45,10 @@ public class AgencyRepositoryImpl implements AgencyRepository {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         String query = "select a from Agency a";
-        List<Agency> agencyList = entityManager.createQuery(query).getResultList();
+        List<Agency> agency = entityManager.createQuery(query).getResultList();
         entityManager.getTransaction().commit();
         entityManager.close();
-        return agencyList;
+        return agency;
     }
 
     @Override
@@ -62,6 +58,7 @@ public class AgencyRepositoryImpl implements AgencyRepository {
             try {
                 Agency agency = getAgencyById(agencyId);
                 agency.setName(newAgency.getName());
+                agency.setPhoneNumber(newAgency.getPhoneNumber());
                 entityManager.merge(agency);
                 entityManager.getTransaction().commit();
                 return "Успешно изменен!";
@@ -80,6 +77,8 @@ public class AgencyRepositoryImpl implements AgencyRepository {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             entityManager.getTransaction().begin();
             Agency agency = getAgencyById(agencyId);
+            agency.setOwners(null);
+            agency.setRentInfos(null);
             entityManager.remove(agency);
             entityManager.getTransaction().commit();
             return "Агентство успешно удалено!";

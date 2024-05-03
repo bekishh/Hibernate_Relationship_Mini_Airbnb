@@ -43,11 +43,25 @@ public class Owner {
     @OneToMany(mappedBy = "owner")
     private List<RentInfo> rentInfos;
 
-    public Owner(String firstName, String lastName, String email, LocalDate dateOfBirth, Gender gender) {
+    public Owner(String firstName, String lastName, String email, LocalDate dateOfBirth, Gender gender, List<House> houses, List<Agency> agencies, List<RentInfo> rentInfos) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
+        this.houses = houses;
+        this.agencies = agencies;
+        this.rentInfos = rentInfos;
+    }
+
+    @Override
+    public String toString() {
+        return "Owner{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender=" + gender +
+                '}';
     }
 }

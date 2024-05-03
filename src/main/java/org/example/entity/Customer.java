@@ -14,7 +14,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_gen")
@@ -42,12 +41,28 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<RentInfo> rentInfos;
 
-    public Customer(String firstName, String lastName, String email, Gender gender, String nationality, FamilyStatus familyStatus) {
+    public Customer(String firstName, String lastName, String email, LocalDate dateOfBirth, Gender gender, String nationality, FamilyStatus familyStatus) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.nationality = nationality;
         this.familyStatus = familyStatus;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", gender=" + gender +
+                ", nationality='" + nationality + '\'' +
+                ", familyStatus=" + familyStatus +
+                ", rentInfo=" + (rentInfo != null ? rentInfo.getId() : null) +
+                '}';
     }
 }

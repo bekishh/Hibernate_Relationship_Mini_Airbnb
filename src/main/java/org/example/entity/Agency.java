@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Agency {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "agency_gen")
@@ -44,4 +43,15 @@ public class Agency {
         this.phoneNumber = phoneNumber;
         this.address = address;
     }
+
+    @Override
+    public String toString() {
+        return "Agency{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", addressId=" + (address != null ? address.getId() : null) +
+                '}';
+    }
+
 }

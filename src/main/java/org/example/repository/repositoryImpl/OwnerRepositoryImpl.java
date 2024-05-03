@@ -16,11 +16,12 @@ public class OwnerRepositoryImpl implements OwnerRepository {
     private final EntityManagerFactory entityManagerFactory = HibernateConfig.getEntityManagerFactory();
 
     @Override
-    public String saveOwner(Owner owner, House house) {
+    public String saveOwnerWithHouse(Owner owner, House house) {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             LocalDate date1 = owner.getDateOfBirth();
             LocalDate date2 = LocalDate.now();
-            long yearsDifference = date1.until(date2, ChronoUnit.YEARS);
+//            long yearsDifference = date1.until(date2, ChronoUnit.YEARS);
+            int yearsDifference = date2.getYear() - date1.getYear();
             if (yearsDifference < 18) {
                 return "Владелец не может быть младше 18 лет!";
             } else {
@@ -29,6 +30,25 @@ public class OwnerRepositoryImpl implements OwnerRepository {
                 house.setOwner(owner);
                 entityManager.persist(owner);
                 entityManager.persist(house);
+                entityManager.getTransaction().commit();
+                return owner.getFirstName() + " успешно сохранен!";
+            }
+        } catch (Exception e) {
+            return "Failed: " + e.getMessage();
+        }
+    }
+
+    @Override
+    public String saveOwner(Owner owner) {
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            LocalDate date1 = owner.getDateOfBirth();
+            LocalDate date2 = LocalDate.now();
+            long yearsDifference = date1.until(date2, ChronoUnit.YEARS);
+            if (yearsDifference < 18) {
+                return "Владелец не может быть младше 18 лет!";
+            } else {
+                entityManager.getTransaction().begin();
+                entityManager.persist(owner);
                 entityManager.getTransaction().commit();
                 return owner.getFirstName() + " успешно сохранен!";
             }
@@ -55,6 +75,10 @@ public class OwnerRepositoryImpl implements OwnerRepository {
             try {
                 Owner owner = entityManager.find(Owner.class, id);
                 owner.setFirstName(newOwner.getFirstName());
+                owner.setLastName(newOwner.getLastName());
+                owner.setEmail(newOwner.getEmail());
+                owner.setDateOfBirth(newOwner.getDateOfBirth());
+                owner.setGender(newOwner.getGender());
                 entityManager.merge(owner);
                 entityManager.getTransaction().commit();
                 return "Владелец успешно изменен!";
@@ -118,6 +142,9 @@ public class OwnerRepositoryImpl implements OwnerRepository {
             entityManager.getTransaction().begin();
             Owner findOwner = entityManager.find(Owner.class, ownerId);
             Agency findAgency = entityManager.find(Agency.class, agencyId);
+            if (findOwner == null || findAgency == null) {
+                return "Агентсво или продавец с указанным id не найдено!";
+            }
             findOwner.getAgencies().add(findAgency);
             findAgency.getOwners().add(findOwner);
             entityManager.getTransaction().commit();

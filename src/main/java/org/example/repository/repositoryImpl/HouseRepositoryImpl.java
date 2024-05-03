@@ -90,7 +90,7 @@ public class HouseRepositoryImpl implements HouseRepository {
             entityManager.getTransaction().begin();
             House findHouse = entityManager.find(House.class, houseId);
             RentInfo rentInfo = findHouse.getRentInfo();
-            if (rentInfo.getCheckIn() != null) {
+            if (rentInfo != null) {
                 if (rentInfo.getCheckOut().isAfter(LocalDate.now())) {
                     return "Невозможно удалить, в доме есть жители";
                 }
@@ -102,8 +102,8 @@ public class HouseRepositoryImpl implements HouseRepository {
                 infoCustomer.getRentInfos().remove(rentInfo);
             }
             Address address = findHouse.getAddress();
-            Agency agency = address.getAgency();
-            agency.setAddress(null);
+//            Agency agency = address.getAgency();
+//            agency.setAddress(null);
             Owner houseOwner = findHouse.getOwner();
             houseOwner.getHouses().remove(findHouse);
             entityManager.remove(findHouse);
@@ -119,8 +119,7 @@ public class HouseRepositoryImpl implements HouseRepository {
         List<House> houses = new ArrayList<>();
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             entityManager.getTransaction().begin();
-            houses = entityManager.createQuery("select h from House h " +
-                            " where h.address.region =:region", House.class)
+            houses = entityManager.createQuery("select h from House h where h.address.region = :region", House.class)
                     .setParameter("region", region).getResultList();
             entityManager.getTransaction().commit();
         } catch (Exception e) {

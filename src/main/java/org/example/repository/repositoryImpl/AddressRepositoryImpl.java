@@ -8,10 +8,7 @@ import org.example.entity.Agency;
 import org.example.repository.AddressRepository;
 import org.hibernate.HibernateException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class AddressRepositoryImpl implements AddressRepository {
     private final EntityManagerFactory entityManagerFactory = HibernateConfig.getEntityManagerFactory();
@@ -103,6 +100,14 @@ public class AddressRepositoryImpl implements AddressRepository {
     public Map<String, List<Agency>> groupByRegion() {
         try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
             entityManager.getTransaction().begin();
+//            String query = "select a from Address a";
+//            List<Address> resultList1 = entityManager.createQuery(query, Address.class).getResultList();
+//            entityManager.getTransaction().commit();
+//            Map<String, List<Agency>> groupedByRegion = new HashMap<>();
+//            Iterator<Address> iterator = resultList1.iterator();
+//            while (iterator.hasNext()) {
+//                groupedByRegion.computeIfAbsent(iterator.next().getRegion(), k -> new ArrayList<>()).add(iterator.next().getAgency());
+//            }
             String query = "select a.region, a.agency from Address a";
             List<Object[]> resultList = entityManager.createQuery(query, Object[].class).getResultList();
             entityManager.getTransaction().commit();

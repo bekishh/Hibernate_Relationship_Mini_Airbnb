@@ -64,13 +64,17 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public List<Customer> getAllCustomers() {
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
-        entityManager.getTransaction().begin();
-        String query = "select a from Customer a";
-        List<Customer> CistomerList = entityManager.createQuery(query).getResultList();
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        return CistomerList;
+        try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
+            entityManager.getTransaction().begin();
+            String query = "select a from Customer a";
+            List<Customer> customers = entityManager.createQuery(query).getResultList();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return customers;
+        } catch (HibernateException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     @Override
@@ -108,6 +112,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             try {
                 Customer customer = entityManager.find(Customer.class, id);
                 customer.setFirstName(newCustomer.getFirstName());
+                customer.setLastName(newCustomer.getLastName());
+                customer.setEmail(newCustomer.getEmail());
+                customer.setDateOfBirth(newCustomer.getDateOfBirth());
+                customer.setGender(newCustomer.getGender());
+                customer.setNationality(newCustomer.getNationality());
+                customer.setFamilyStatus(newCustomer.getFamilyStatus());
                 entityManager.merge(customer);
                 entityManager.getTransaction().commit();
                 return "Клиент успешно изменен!";
